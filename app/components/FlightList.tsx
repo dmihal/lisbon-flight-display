@@ -1,7 +1,14 @@
 "use client"
 import { useEffect, useState } from "react";
-import { Point, isPointInQuadrilateral } from "../utils/geo";
+import { Point, distanceBetweenPoints, isPointInQuadrilateral, knotsToKmPerSec } from "../utils/geo";
 import { getAirline, getAirport, getPlane } from "../utils/flights";
+import { Counter } from "./Counter";
+
+if (!process.env.NEXT_PUBLIC_HOME_COORDINATE) {
+  throw new Error("Missing NEXT_PUBLIC_HOME_COORDINATE");
+}
+const [homeX, homeY] = process.env.NEXT_PUBLIC_HOME_COORDINATE.split(",").map(Number);
+const home: Point = { x: homeX, y: homeY };
 
 const lisbonArrivalArea: Point[] = [
   {
@@ -41,9 +48,29 @@ const lisbonDepartureArea: Point[] = [
   }
 ];
 
+const tejo: Point[] = [
+  {
+    x: -9.1381453,
+    y: 38.7029544
+  },
+  {
+    x: -9.2107581,
+    y: 38.6900927
+  },
+  {
+    x: -9.2074965,
+    y: 38.6784348
+  },
+  {
+    x: -9.135742,
+    y: 38.6919685
+  }
+];
+
 export default function FlightList() {
   const [liveFlights, setLiveFlights] = useState<any[]>([]);
   const [trains, setTrains] = useState<any[]>([]);
+  const [boats, setBoats] = useState<any[]>([]);
 
   const refreshFlights = async () => {
     const response = await fetch("/api/flights");
@@ -53,9 +80,11 @@ export default function FlightList() {
         const location = { x: flight.lon, y: flight.lat };
         const isArriving = flight.extraInfo.route?.to === 'LIS' && isPointInQuadrilateral(location, lisbonArrivalArea);
         const isDeparting = flight.extraInfo.route?.from === 'LIS' && isPointInQuadrilateral(location, lisbonDepartureArea);
-        return { ...flight, isArriving, isDeparting };
+        const distanceToHome = distanceBetweenPoints(location, home);
+        return { ...flight, isArriving, isDeparting, distanceToHome };
       })
-      .filter((flight: any) => flight.isArriving || flight.isDeparting);
+      .filter((flight: any) => flight.isArriving || flight.isDeparting)
+      .sort((a: any, b: any) => a.distanceToHome - b.distanceToHome);
     console.log(filteredFlights);
     setLiveFlights(filteredFlights);
   }
@@ -68,27 +97,50 @@ export default function FlightList() {
       .flat()
       .filter((train: any) => train.brand_id === 'LisbonFertagus')
     );
-  }
+  };
+
+  const refreshBoats = async () => {
+    // const response = await fetch("/api/boats");
+    // const data = await response.json();
+    // const selectedBoats = data.data.rows.filter((boat: any) => {
+    //   const location = { x: boat.LAT, y: boat.LON };
+    //   return isPointInQuadrilateral(location, tejo);
+    // });
+    // setBoats(selectedBoats);
+  };
 
   useEffect(() => {
     refreshFlights();
     refreshTrains();
+    refreshBoats();
+
     const flightInterval = setInterval(refreshFlights, 5000);
     const trainInterval = setInterval(refreshTrains, 30000);
+    const boatInterval = setInterval(refreshBoats, 30000);
+
     return () => {
       clearInterval(flightInterval);
       clearInterval(trainInterval);
+      clearInterval(boatInterval);
     }
   }, []);
 
-  const upcomingTrains = trains.filter((train) => {
-    const northbound = train.destination === 'Roma-Areeiro';
-    const arrivalTime = new Date(train.stops[0].arrival_time);
-    const timeUntilArrival = (arrivalTime.getTime() - Date.now()) / 1000;
+  const upcomingTrains = trains
+    .map((train: any) => {
+      const northbound = train.destination === 'Roma-Areeiro';
+      const arrivalTime = new Date(train.stops[0].arrival_time);
+      const timeUntilArrival = (arrivalTime.getTime() - Date.now()) / 1000;
 
-    return northbound
-      ? timeUntilArrival > 60 && timeUntilArrival < 120
-      : timeUntilArrival > 0 && timeUntilArrival < 60;
+      if (timeUntilArrival < 1000) {
+        console.log({northbound, timeUntilArrival, destination: train.destination});
+      }
+
+      return { ...train, northbound, timeUntilArrival };
+    })
+    .filter((train: any) => {
+      return train.northbound
+        ? train.timeUntilArrival > 350 && train.timeUntilArrival < 600
+        : train.timeUntilArrival > 500 && train.timeUntilArrival < 600;
   });
 
   return (
@@ -96,12 +148,18 @@ export default function FlightList() {
       <h1>Flight List</h1>
       {liveFlights.map((flight) => (
         <pre key={flight.extraInfo.flight}>
-          ✈️{flight.extraInfo.flight} - {getAirport(flight.extraInfo.route.from)} - {getAirport(flight.extraInfo.route.to)} - {getPlane(flight.extraInfo.type)} - {flight.extraInfo.flight ? getAirline(flight.extraInfo.flight) : 'Unknown'}
+          ✈️{flight.extraInfo.flight} - {getAirport(flight.extraInfo.route.from)} - {getAirport(flight.extraInfo.route.to)} - {getPlane(flight.extraInfo.type)} - {flight.extraInfo.flight ? getAirline(flight.extraInfo.flight) : 'Unknown'}{' - '}
+          <Counter value={flight.distanceToHome} speed={knotsToKmPerSec(flight.speed) * -1} />km away
         </pre>
       ))}
       {upcomingTrains.map((train) => (
         <pre key={train.trip_equivalence_id}>
-          🚂{train.destination}
+          🚂{train.destination} - {train.timeUntilArrival}s until {train.northbound ? 'Campolide' : 'Pragal'}
+        </pre>
+      ))}
+      {boats.map((boat) => (
+        <pre key={boat.SHIP_ID}>
+          🚤{boat.SHIPNAME} - {boat.DESTINATION}
         </pre>
       ))}
     </div>
