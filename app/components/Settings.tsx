@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import useLocalStorageState from "use-local-storage-state";
 
 export default function Settings() {
-  const [sleepLock, _setSleepLock] = useState(false);
+  const [sleepLock, _setSleepLock] = useLocalStorageState('sleepLock', { defaultValue: false });
   const wakeLock = useRef<null | WakeLockSentinel>(null);
 
   const setSleepLock = async (value: boolean) => {
@@ -13,6 +14,12 @@ export default function Settings() {
 
     _setSleepLock(value);
   };
+
+  useEffect(() => {
+    if (sleepLock) {
+      setSleepLock(true);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center mt-20">
