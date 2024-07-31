@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Point, distanceBetweenPoints, isPointInQuadrilateral, knotsToKmPerSec } from "../utils/geo";
 import { getAirline, getAirport, getPlane } from "../utils/flights";
 import { Counter } from "./Counter";
+import Settings from "./Settings";
 
 if (!process.env.NEXT_PUBLIC_HOME_COORDINATE) {
   throw new Error("Missing NEXT_PUBLIC_HOME_COORDINATE");
@@ -162,6 +163,8 @@ export default function FlightList() {
           🚤{boat.SHIPNAME} - {boat.DESTINATION}
         </pre>
       ))}
+
+      <Settings />
     </div>
   )
 }
