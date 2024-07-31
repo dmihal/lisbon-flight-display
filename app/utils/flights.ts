@@ -115,6 +115,7 @@ const airports: { [id: string]: string } = {
   'HEL': 'Helsinki',
   'HOR': 'Horta',
   'IAD': 'Washington Dulles',
+  'IBZ': 'Ibiza',
   'IST': 'Istanbul',
   'JFK': 'New York JFK',
   'LAD': 'Luanda',

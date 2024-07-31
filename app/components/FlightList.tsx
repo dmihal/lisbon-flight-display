@@ -4,6 +4,7 @@ import { Point, distanceBetweenPoints, isPointInQuadrilateral, knotsToKmPerSec }
 import { getAirline, getAirport, getPlane } from "../utils/flights";
 import { Counter } from "./Counter";
 import Settings from "./Settings";
+import Flight from "./Flight";
 
 if (!process.env.NEXT_PUBLIC_HOME_COORDINATE) {
   throw new Error("Missing NEXT_PUBLIC_HOME_COORDINATE");
@@ -146,12 +147,17 @@ export default function FlightList() {
 
   return (
     <div>
-      <h1>Flight List</h1>
       {liveFlights.map((flight) => (
-        <pre key={flight.extraInfo.flight}>
-          ✈️{flight.extraInfo.flight} - {getAirport(flight.extraInfo.route.from)} - {getAirport(flight.extraInfo.route.to)} - {getPlane(flight.extraInfo.type)} - {flight.extraInfo.flight ? getAirline(flight.extraInfo.flight) : 'Unknown'}{' - '}
-          <Counter value={flight.distanceToHome} speed={knotsToKmPerSec(flight.speed) * -1} />km away
-        </pre>
+        <Flight
+          key={flight.extraInfo.flight}
+          airport={getAirport(flight.isArriving ? flight.extraInfo.route.from : flight.extraInfo.route.to)}
+          inbound={flight.isArriving}
+          number={flight.extraInfo.flight}
+          plane={getPlane(flight.extraInfo.type)}
+          airline={getAirline(flight.extraInfo.flight)}
+          distance={flight.distanceToHome}
+          speed={knotsToKmPerSec(flight.speed)}
+        />
       ))}
       {upcomingTrains.map((train) => (
         <pre key={train.trip_equivalence_id}>
