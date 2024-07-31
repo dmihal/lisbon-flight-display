@@ -127,6 +127,7 @@ const airports: { [id: string]: string } = {
   'LUX': 'Luxembourg',
   'LYS': 'Lyon',
   'MAD': 'Madrid',
+  'MAH': 'Menorca',
   'MAN': 'Manchester',
   'MIA': 'Miami',
   'MLA': 'Malta',

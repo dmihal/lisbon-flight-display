@@ -156,7 +156,7 @@ export default function FlightList() {
           plane={getPlane(flight.extraInfo.type)}
           airline={getAirline(flight.extraInfo.flight)}
           distance={flight.distanceToHome}
-          speed={knotsToKmPerSec(flight.speed)}
+          speed={knotsToKmPerSec(flight.speed) * -1}
         />
       ))}
       {upcomingTrains.map((train) => (
