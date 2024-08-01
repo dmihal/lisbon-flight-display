@@ -26,6 +26,6 @@ export function Counter({ value, speed }: { value: number; speed: number }) {
   }, [value, speed]);
 
   return (
-    <span ref={ref}>{currentVal.current}</span>
+    <span ref={ref} className="tabular-nums">{currentVal.current}</span>
   )
 }

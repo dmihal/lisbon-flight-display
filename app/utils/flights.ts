@@ -34,6 +34,7 @@ const airlines: { [id: string]: string } = {
   'DL': 'Delta Air Lines',
   'DT': 'TAAG Angola Airlines',
   'DY': 'Norwegian Air Shuttle',
+  'EI': 'Aer Lingus',
   'EW': 'Eurowings',
   'FR': 'Ryanair',
   'HV': 'Transavia',

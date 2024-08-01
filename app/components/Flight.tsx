@@ -21,7 +21,7 @@ export default function Flight({ airport, inbound, number, plane, airline, dista
         {airport}
       </div>
       <div className="md:text-3xl text-center text-xl">{airline}</div>
-      <div className="md:col-start-4 md:row-start-2 md:text-3xl text-center text-xl">{plane}</div>
+      <div className="md:col-start-4 md:row-start-2 md:text-2xl text-center text-xl">{plane}</div>
       <div className="md:col-start-5 md:row-start-1 md:row-span-2 col-span-2 md:col-span-1 text-2xl md:text-4xl font-medium text-right flex justify-end items-center">
         <Counter value={distance} speed={speed} />km
       </div>
