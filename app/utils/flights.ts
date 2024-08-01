@@ -156,6 +156,7 @@ const airports: { [id: string]: string } = {
   'RTM': 'Rotterdam',
   'SFO': 'San Francisco',
   'STN': 'London Stansted',
+  'SVQ': 'Seville',
   'TER': 'Terceira',
   'TLV': 'Tel Aviv',
   'TLS': 'Toulouse',
