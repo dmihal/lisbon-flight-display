@@ -59,6 +59,7 @@ const airlines: { [id: string]: string } = {
   'UX': 'Air Europa',
   'VY': 'Vueling',
   'WT': 'Swiftair',
+  'YU': 'EuroAtlantic Airways',
   'YW': 'Air Nostrum Iberia Regional',
 }
 
@@ -149,6 +150,7 @@ const airports: { [id: string]: Airport } = {
   'ORD': { name: 'Chicago O\'Hare', flag: '🇺🇸' },
   'ORY': { name: 'Paris Orly', flag: '🇫🇷' },
   'OSL': { name: 'Oslo', flag: '🇳🇴' },
+  'OXB': { name: 'Bissau', flag: '🇬🇼' },
   'PDL': { name: 'Ponta Delgada', flag: '🇵🇹' },
   'PHL': { name: 'Philadelphia', flag: '🇺🇸' },
   'PHX': { name: 'Phoenix', flag: '🇺🇸' },
@@ -183,4 +185,4 @@ const airports: { [id: string]: Airport } = {
   'ZRH': { name: 'Zurich', flag: '🇨🇭' },
 };
 
-export const getAirport = (airport: string) => airports[airport] || airport;
+export const getAirport = (airport: string) => airports[airport] || { name: airport, flag: '' };
