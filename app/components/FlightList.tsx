@@ -50,29 +50,9 @@ const lisbonDepartureArea: Point[] = [
   }
 ];
 
-const tejo: Point[] = [
-  {
-    x: -9.1381453,
-    y: 38.7029544
-  },
-  {
-    x: -9.2107581,
-    y: 38.6900927
-  },
-  {
-    x: -9.2074965,
-    y: 38.6784348
-  },
-  {
-    x: -9.135742,
-    y: 38.6919685
-  }
-];
-
 export default function FlightList() {
   const [liveFlights, setLiveFlights] = useState<any[]>([]);
   const [trains, setTrains] = useState<any[]>([]);
-  const [boats, setBoats] = useState<any[]>([]);
 
   const refreshFlights = async () => {
     const response = await fetch("/api/flights");
@@ -101,29 +81,16 @@ export default function FlightList() {
     );
   };
 
-  const refreshBoats = async () => {
-    // const response = await fetch("/api/boats");
-    // const data = await response.json();
-    // const selectedBoats = data.data.rows.filter((boat: any) => {
-    //   const location = { x: boat.LAT, y: boat.LON };
-    //   return isPointInQuadrilateral(location, tejo);
-    // });
-    // setBoats(selectedBoats);
-  };
-
   useEffect(() => {
     refreshFlights();
     refreshTrains();
-    refreshBoats();
 
     const flightInterval = setInterval(refreshFlights, 5000);
     const trainInterval = setInterval(refreshTrains, 30000);
-    const boatInterval = setInterval(refreshBoats, 30000);
 
     return () => {
       clearInterval(flightInterval);
       clearInterval(trainInterval);
-      clearInterval(boatInterval);
     }
   }, []);
 
@@ -164,13 +131,6 @@ export default function FlightList() {
           🚂{train.destination} - {train.timeUntilArrival}s until {train.northbound ? 'Campolide' : 'Pragal'}
         </pre>
       ))}
-      {boats.map((boat) => (
-        <pre key={boat.SHIP_ID}>
-          🚤{boat.SHIPNAME} - {boat.DESTINATION}
-        </pre>
-      ))}
-
-      <Settings />
     </div>
   )
 }

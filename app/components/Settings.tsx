@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef } from "react";
 import useLocalStorageState from "use-local-storage-state";
 
