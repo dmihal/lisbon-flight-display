@@ -21,6 +21,13 @@ const tejo: Point[] = [
   }
 ];
 
+const tejoVisible: Point[] = [
+  { x: 38.697602, y: -9.1787258 },
+  { x: 38.6807862, y: -9.1748714 },
+  { x: 38.6839018, y: -9.1606236 },
+  { x: 38.6993771, y: -9.1662025 }
+];
+
 export default function BoatList() {
   const [boats, setBoats] = useState<any[]>([]);
 
@@ -32,7 +39,12 @@ export default function BoatList() {
       const location = { x: lat, y: lon };
       console.log(location, tejo);
       return isPointInQuadrilateral(location, tejo);
-      return true
+    }).map((boat: any) => {
+      const { Longitude: lon, Latitude: lat } = boat.Message.PositionReport;
+      const location = { x: lat, y: lon };
+      const isVisible = isPointInQuadrilateral(location, tejoVisible);
+
+      return { ...boat, isVisible };
     });
     setBoats(selectedBoats);
   };
@@ -46,8 +58,15 @@ export default function BoatList() {
   }, []);
 
   return (
-    <ul>
-      {boats.map(boat => <li>🚤<pre>{boat.MetaData.ShipName}</pre></li>)}
-    </ul>
+    <div>
+      Visible
+      <ul>
+        {boats.filter(boat => boat.isVisible).map(boat => <li>🚤<pre>{boat.MetaData.ShipName}</pre></li>)}
+      </ul>
+      Others
+      <ul>
+        {boats.filter(boat => !boat.isVisible).map(boat => <li>🚤<pre>{boat.MetaData.ShipName}</pre></li>)}
+      </ul>
+    </div>
   )
 }
