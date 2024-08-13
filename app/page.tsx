@@ -3,6 +3,7 @@ import BoatList from "./components/BoatList";
 import FlightList from "./components/FlightList";
 import Settings from "./components/Settings";
 import { useState } from "react";
+import TrainList from "./components/TrainList";
 
 export default function Home() {
   const [showBoats, setShowBoats] = useState(false);
@@ -10,6 +11,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col justify-between">
       <FlightList />
+      <TrainList />
       {showBoats && <BoatList />}
       <Settings showBoats={showBoats} onShowBoats={(newShowBoats: boolean) => setShowBoats(newShowBoats)} />
     </main>

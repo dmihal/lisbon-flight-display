@@ -10,8 +10,8 @@ from fr24.proto.request_pb2 import LiveFeedResponse
 import asyncio
 import json
 from google.protobuf.json_format import MessageToDict
-import subprocess
 from . import aisstream_tracker
+from . import infra_portugal
 
 app = FastAPI()
 
@@ -40,16 +40,8 @@ async def get_data():
     return data_dict
 
 @app.get("/api/trains")
-async def get_boats():
-    url = "https://citymapper.com/api/1/raildepartures?headways=2&ids=LisbonStation_Pragal,LisbonStation_CampolideA&region_id=pt-lisbon"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
-    }
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url, headers=headers)
-        response.raise_for_status()
-        return response.json()
-
+async def get_trains():
+    return await infra_portugal.get_train_data()
 
 @app.get("/api/boats")
 async def get_curl():
