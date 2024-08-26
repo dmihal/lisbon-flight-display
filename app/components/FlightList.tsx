@@ -1,9 +1,8 @@
 "use client"
 import { useEffect, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { Point, distanceBetweenPoints, isPointInQuadrilateral, knotsToKmPerSec } from "../utils/geo";
 import { getAirline, getAirport, getPlane } from "../utils/flights";
-import { Counter } from "./Counter";
-import Settings from "./Settings";
 import Flight from "./Flight";
 
 if (!process.env.NEXT_PUBLIC_HOME_COORDINATE) {
@@ -52,7 +51,6 @@ const lisbonDepartureArea: Point[] = [
 
 export default function FlightList() {
   const [liveFlights, setLiveFlights] = useState<any[]>([]);
-  const [trains, setTrains] = useState<any[]>([]);
 
   const refreshFlights = async () => {
     const response = await fetch("/api/flights");
@@ -71,65 +69,27 @@ export default function FlightList() {
     setLiveFlights(filteredFlights);
   }
 
-  const refreshTrains = async () => {
-    const response = await fetch("/api/trains");
-    const data = await response.json();
-    setTrains(data.stations
-      .map((station: any) => station.departures)
-      .flat()
-      .filter((train: any) => train.brand_id === 'LisbonFertagus')
-    );
-  };
-
   useEffect(() => {
     refreshFlights();
-    refreshTrains();
-
     const flightInterval = setInterval(refreshFlights, 5000);
-    const trainInterval = setInterval(refreshTrains, 30000);
 
-    return () => {
-      clearInterval(flightInterval);
-      clearInterval(trainInterval);
-    }
+    return () => clearInterval(flightInterval);
   }, []);
-
-  const upcomingTrains = trains
-    .map((train: any) => {
-      const northbound = train.destination === 'Roma-Areeiro';
-      const arrivalTime = new Date(train.stops[0].arrival_time);
-      const timeUntilArrival = (arrivalTime.getTime() - Date.now()) / 1000;
-
-      if (timeUntilArrival < 1000) {
-        console.log({northbound, timeUntilArrival, destination: train.destination});
-      }
-
-      return { ...train, northbound, timeUntilArrival };
-    })
-    .filter((train: any) => {
-      return train.northbound
-        ? train.timeUntilArrival > 350 && train.timeUntilArrival < 600
-        : train.timeUntilArrival > 500 && train.timeUntilArrival < 600;
-  });
 
   return (
     <div>
       {liveFlights.map((flight) => (
-        <Flight
-          key={flight.extraInfo.flight}
-          airport={getAirport(flight.isArriving ? flight.extraInfo.route.from : flight.extraInfo.route.to)}
-          inbound={flight.isArriving}
-          number={flight.extraInfo.flight}
-          plane={getPlane(flight.extraInfo.type)}
-          airline={getAirline(flight.extraInfo.flight)}
-          distance={flight.distanceToHome}
-          speed={knotsToKmPerSec(flight.speed) * -1}
-        />
-      ))}
-      {upcomingTrains.map((train) => (
-        <pre key={train.trip_equivalence_id}>
-          🚂{train.destination} - {train.timeUntilArrival}s until {train.northbound ? 'Campolide' : 'Pragal'}
-        </pre>
+        <ErrorBoundary key={flight.extraInfo.flight} fallbackRender={({ error }) => <pre>{error.message}</pre>}>
+          <Flight
+            airport={getAirport(flight.isArriving ? flight.extraInfo.route.from : flight.extraInfo.route.to)}
+            inbound={flight.isArriving}
+            number={flight.extraInfo.flight}
+            plane={getPlane(flight.extraInfo.type)}
+            airline={getAirline(flight.extraInfo.flight)}
+            distance={flight.distanceToHome}
+            speed={knotsToKmPerSec(flight.speed) * -1}
+          />
+        </ErrorBoundary>
       ))}
     </div>
   )
