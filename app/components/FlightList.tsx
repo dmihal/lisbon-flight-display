@@ -49,8 +49,25 @@ const lisbonDepartureArea: Point[] = [
   }
 ];
 
+interface Flight {
+  extraInfo: {
+    flight?: string;
+    type: string;
+    route: {
+      from: string;
+      to: string;
+    };
+  };
+  lat: number;
+  lon: number;
+  speed: number;
+  isArriving: boolean;
+  isDeparting: boolean;
+  distanceToHome: number;
+}
+
 export default function FlightList() {
-  const [liveFlights, setLiveFlights] = useState<any[]>([]);
+  const [liveFlights, setLiveFlights] = useState<Flight[]>([]);
 
   const refreshFlights = async () => {
     const response = await fetch("/api/flights");
@@ -85,7 +102,7 @@ export default function FlightList() {
             inbound={flight.isArriving}
             number={flight.extraInfo.flight}
             plane={getPlane(flight.extraInfo.type)}
-            airline={getAirline(flight.extraInfo.flight)}
+            airline={flight.extraInfo.flight ? getAirline(flight.extraInfo.flight) : "Unknown"}
             distance={flight.distanceToHome}
             speed={knotsToKmPerSec(flight.speed) * -1}
           />
