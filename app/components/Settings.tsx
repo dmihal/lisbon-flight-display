@@ -2,7 +2,14 @@
 import { useEffect, useRef } from "react";
 import useLocalStorageState from "use-local-storage-state";
 
-export default function Settings({ showBoats, onShowBoats }: { showBoats: boolean; onShowBoats: (showBoats: boolean) => void }) {
+interface SettingsProps {
+  showBoats: boolean;
+  onShowBoats: (showBoats: boolean) => void;
+  showTrains: boolean;
+  onShowTrains: (showTrains: boolean) => void;
+}
+
+export default function Settings({ showBoats, onShowBoats, showTrains, onShowTrains }: SettingsProps) {
   const [sleepLock, _setSleepLock] = useLocalStorageState('sleepLock', { defaultValue: false });
   const wakeLock = useRef<null | WakeLockSentinel>(null);
 
@@ -25,8 +32,8 @@ export default function Settings({ showBoats, onShowBoats }: { showBoats: boolea
   return (
     <div className="flex flex-col items-center justify-center mt-20">
       <h1 className="text-2xl font-bold">Settings</h1>
-      <div className="flex flex-col items-center justify-center mt-8">
-        <label className="flex items-center justify-center">
+      <div className="flex flex-row items-center justify-center mt-8 space-x-4">
+        <label className="flex items-center">
           <input
             type="checkbox"
             checked={sleepLock}
@@ -35,9 +42,7 @@ export default function Settings({ showBoats, onShowBoats }: { showBoats: boolea
           />
           Sleep Lock
         </label>
-      </div>
-      <div className="flex flex-col items-center justify-center mt-8">
-        <label className="flex items-center justify-center">
+        <label className="flex items-center">
           <input
             type="checkbox"
             checked={showBoats}
@@ -45,6 +50,15 @@ export default function Settings({ showBoats, onShowBoats }: { showBoats: boolea
             className="mr-2"
           />
           Show Boats
+        </label>
+        <label className="flex items-center">
+          <input
+            type="checkbox"
+            checked={showTrains}
+            onChange={e => onShowTrains(e.target.checked)}
+            className="mr-2"
+          />
+          Show Trains
         </label>
       </div>
     </div>
