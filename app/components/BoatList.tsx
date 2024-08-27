@@ -61,11 +61,11 @@ export default function BoatList() {
     <div>
       Visible
       <ul>
-        {boats.filter(boat => boat.isVisible).map(boat => <li>🚤<pre>{boat.MetaData.ShipName}</pre></li>)}
+        {boats.filter(boat => boat.isVisible).map(boat => <li key={boat.MetaData.MMSI}>🚤<pre>{boat.MetaData.ShipName}</pre></li>)}
       </ul>
       Others
       <ul>
-        {boats.filter(boat => !boat.isVisible).map(boat => <li>🚤<pre>{boat.MetaData.ShipName}</pre></li>)}
+        {boats.filter(boat => !boat.isVisible).map(boat => <li key={boat.MetaData.MMSI}>🚤<pre>{boat.MetaData.ShipName}</pre></li>)}
       </ul>
     </div>
   )

@@ -136,7 +136,7 @@ export default function TrainList() {
       Trains
       <ul>
         {trains.map(train => (
-          <li>
+          <li key={train.number}>
             <div>🚂{train.number}: {getDirection(train)} - {train.line} - {train.destination}: {isVisible(train) && 'Visible'}</div>
             <pre>{formatTime(train.departureTime)} - {formatTime(train.arrivalTime)} ({percentage(train)})</pre>
             <Counter value={(train.arrivalTime.getTime() - Date.now()) / 60 / 1000} speed={-1/60} />
