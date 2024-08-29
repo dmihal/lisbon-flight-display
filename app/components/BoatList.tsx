@@ -66,7 +66,7 @@ export default function BoatList() {
       Visible
       <div>
         {boats.filter(boat => boat.isVisible).map(boat => (
-          <Boat key={boat.MetaData.MMSI} boat={boat} staticData={metadata[boat.MetaData.MMSI]?.Message.ShipStaticData} />
+          <Boat key={boat.MetaData.MMSI} boat={boat} staticData={metadata[boat.MetaData.MMSI]?.Message.ShipStaticData} isVisible />
         ))}
       </div>
       Others
