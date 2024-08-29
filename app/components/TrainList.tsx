@@ -36,7 +36,7 @@ export default function TrainList() {
           }
         }
 
-        const line = station == 'alcantara_mar' || station == 'belem' ? 'cascais' : 'fertagus';
+        const line = station == 'alcantara_mar' || station == 'belem' ? 'CP Cascais Line' : 'Fertagus';
 
         console.log(train, departureTime);
         return { ...train, nextStop: station, departureTime, line };
@@ -93,7 +93,7 @@ export default function TrainList() {
     <div>
       Trains
       <div>
-        {trains.filter(train => isVisible(train) && train.line == 'fertagus').map(train => (
+        {trains.filter(train => isVisible(train) && train.line == 'Fertagus').map(train => (
           <Train key={train.number} train={train} />
         ))}
       </div>
