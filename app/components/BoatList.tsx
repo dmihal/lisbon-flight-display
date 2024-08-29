@@ -1,6 +1,8 @@
 "use client"
 import { useEffect, useState } from "react";
 import { isPointInQuadrilateral, Point } from "../utils/geo";
+import { shipTypes } from "../utils/boats";
+import Boat from "./Boat";
 
 const tejo: Point[] = [
   {
@@ -30,6 +32,7 @@ const tejoVisible: Point[] = [
 
 export default function BoatList() {
   const [boats, setBoats] = useState<any[]>([]);
+  const [metadata, setMetadata] = useState<any>({});
 
   const refreshBoats = async () => {
     const response = await fetch("/api/boats");
@@ -47,6 +50,7 @@ export default function BoatList() {
       return { ...boat, isVisible };
     });
     setBoats(selectedBoats);
+    setMetadata(data.shipData);
   };
 
   useEffect(() => {
@@ -60,12 +64,16 @@ export default function BoatList() {
   return (
     <div>
       Visible
-      <ul>
-        {boats.filter(boat => boat.isVisible).map(boat => <li key={boat.MetaData.MMSI}>🚤<pre>{boat.MetaData.ShipName}</pre></li>)}
-      </ul>
+      <div>
+        {boats.filter(boat => boat.isVisible).map(boat => (
+          <Boat key={boat.MetaData.MMSI} boat={boat} staticData={metadata[boat.MetaData.MMSI]?.Message.ShipStaticData} />
+        ))}
+      </div>
       Others
       <ul>
-        {boats.filter(boat => !boat.isVisible).map(boat => <li key={boat.MetaData.MMSI}>🚤<pre>{boat.MetaData.ShipName}</pre></li>)}
+        {boats.filter(boat => !boat.isVisible).map(boat => (
+          <Boat key={boat.MetaData.MMSI} boat={boat} staticData={metadata[boat.MetaData.MMSI]?.Message.ShipStaticData} />
+        ))}
       </ul>
     </div>
   )
