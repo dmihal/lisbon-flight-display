@@ -17,13 +17,13 @@ export function Counter({ value, speed, minutes }: CounterProps) {
   const startTime = useRef(Date.now());
   const animationRef = useRef<number>();
 
-  const _speed = minutes ? 1 / 60 : 1;
+  const _speed = minutes ? 1 / 60 : speed;
   const formatValue = minutes ? (val: number) => formatTime(val) : (val: number) => val.toFixed(2);
 
   const calculate = () => {
     const now = Date.now();
     const elapsedTime = now - startTime.current;
-    const delta = elapsedTime / 1000 * _speed;
+    const delta = elapsedTime / 1000 * _speed!;
     currentVal.current = value + delta;
 
     if (ref.current) {
