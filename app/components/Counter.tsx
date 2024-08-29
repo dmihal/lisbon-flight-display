@@ -1,6 +1,10 @@
 import { use, useEffect, useRef } from "react";
 
-type CounterProps = { value: number } & ({ speed: number, minutes: undefined } | { minutes: boolean, speed: undefined });
+interface CounterProps {
+  value: number;
+  speed?: number;
+  minutes?: boolean;
+}
 
 function formatTime(val: number) {
   const seconds = Math.abs(Math.floor(val % 1 * 60));
