@@ -13,7 +13,7 @@ export default function Train({ train }: { train: any }) {
       <div className="md:text-3xl text-center text-xl">{formatTime(train.departureTime)} - {formatTime(train.arrivalTime)}</div>
       <div className="md:col-start-4 md:row-start-2 md:text-2xl text-center text-xl">{train.line}</div>
       <div className="md:col-start-5 md:row-start-1 md:row-span-2 col-span-2 md:col-span-1 text-2xl md:text-2xl font-medium text-right flex justify-end items-center">
-        <Counter value={(train.arrivalTime.getTime() - Date.now()) / 60 / 1000} speed={-1/60} />
+        <Counter value={(train.arrivalTime.getTime() - Date.now()) / 60 / 1000} minutes />
         min until next station
       </div>
     </div>
