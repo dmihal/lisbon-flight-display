@@ -4,3 +4,4 @@ httpx==0.27.0
 fr24==0.1.2
 websockets
 asyncio
+python-dateutil

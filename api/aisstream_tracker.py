@@ -1,7 +1,8 @@
 import asyncio
 import websockets
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from dateutil import parser
 
 class BoatTracker:
     def __init__(self):
@@ -34,6 +35,7 @@ class BoatTracker:
                     self.positions[message["MetaData"]["MMSI"]] = message
                 if message_type == "ShipStaticData":
                     self.ship_data[message["MetaData"]["MMSI"]] = message
+                self.remove_expired()
         except websockets.ConnectionClosed:
             print("Connection closed")
         finally:
@@ -47,6 +49,22 @@ class BoatTracker:
 
     def get_ship_data(self):
         return self.ship_data
+
+    def remove_expired(self):
+        now = datetime.now(timezone.utc)
+        expired = 0
+        for mmsi, position in list(self.positions.items()):
+            truncated_date_string = position["MetaData"]["time_utc"][:-4]  # Remove ' UTC'
+            truncated_date_string = truncated_date_string[:26] + truncated_date_string[-6:]  # Truncate to microseconds
+
+            # Parse the date string
+            parsed_date = parser.parse(truncated_date_string)
+
+            if now - parsed_date > timedelta(minutes=30):
+                expired = expired + 1
+                del self.positions[mmsi]
+        if expired > 0:
+            print(f"Removed {expired} expired positions")
 
     def close(self):
         self.running = False

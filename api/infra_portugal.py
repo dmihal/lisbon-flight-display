@@ -31,7 +31,6 @@ async def get_station(station_id):
     end_formatted = time_1_hour_from_now.strftime('%Y-%m-%d%%20%H:%M')
 
     url = f"https://www.infraestruturasdeportugal.pt/negocios-e-servicos/partidas-chegadas/{station_id}/{start_formatted}/{end_formatted}/URB%7CSUBUR"
-    print(url)
     async with httpx.AsyncClient() as client:
         response = await client.get(url, timeout=15.0)
         response.raise_for_status()
