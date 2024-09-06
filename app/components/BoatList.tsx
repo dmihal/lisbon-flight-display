@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { isPointInQuadrilateral, Point } from "../utils/geo";
 import { shipTypes } from "../utils/boats";
 import Boat from "./Boat";
+import BoatMap from "./BoatMap";
 
 const tejo: Point[] = [
   {
@@ -33,6 +34,7 @@ const tejoVisible: Point[] = [
 export default function BoatList() {
   const [boats, setBoats] = useState<any[]>([]);
   const [metadata, setMetadata] = useState<any>({});
+  const [showMap, setShowMap] = useState(false);
 
   const refreshBoats = async () => {
     const response = await fetch("/api/boats");
@@ -75,6 +77,15 @@ export default function BoatList() {
           <Boat key={boat.MetaData.MMSI} boat={boat} staticData={metadata[boat.MetaData.MMSI]?.Message.ShipStaticData} />
         ))}
       </ul>
+
+      {showMap && (
+        <BoatMap boats={boats} metadata={metadata} />
+      )}
+
+      <label>
+        <input type="checkbox" checked={showMap} onChange={() => setShowMap(!showMap)} />
+        Show Map
+      </label>
     </div>
   )
 }
