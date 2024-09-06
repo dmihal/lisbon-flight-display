@@ -1,6 +1,7 @@
 import asyncio
 from datetime import datetime, timedelta
 import httpx
+import pytz
 
 PRAGAL_ID = 9417087
 CAMPOLIDE_ID = 9467033
@@ -23,9 +24,11 @@ async def get_train_data():
     }
 
 async def get_station(station_id):
+    tz = pytz.timezone('Europe/Lisbon')
+
     # date = datetime.now().strftime('%Y-%m-%d')
-    time_30_minutes_ago = datetime.now() - timedelta(minutes=30)
-    time_1_hour_from_now = datetime.now() + timedelta(hours=1)
+    time_30_minutes_ago = datetime.now(tz) - timedelta(minutes=30)
+    time_1_hour_from_now = datetime.now(tz) + timedelta(hours=1)
 
     start_formatted = time_30_minutes_ago.strftime('%Y-%m-%d%%20%H:%M')
     end_formatted = time_1_hour_from_now.strftime('%Y-%m-%d%%20%H:%M')

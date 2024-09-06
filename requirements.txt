@@ -5,3 +5,4 @@ fr24==0.1.2
 websockets
 asyncio
 python-dateutil
+pytz
