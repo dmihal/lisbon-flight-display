@@ -35,6 +35,7 @@ export default function BoatList() {
   const [boats, setBoats] = useState<any[]>([]);
   const [metadata, setMetadata] = useState<any>({});
   const [showMap, setShowMap] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const refreshBoats = async () => {
     const response = await fetch("/api/boats");
@@ -43,7 +44,7 @@ export default function BoatList() {
       const { Longitude: lon, Latitude: lat } = boat.Message.PositionReport;
       const location = { x: lat, y: lon };
       console.log(location, tejo);
-      return isPointInQuadrilateral(location, tejo);
+      return showAll || isPointInQuadrilateral(location, tejo);
     }).map((boat: any) => {
       const { Longitude: lon, Latitude: lat } = boat.Message.PositionReport;
       const location = { x: lat, y: lon };
@@ -61,7 +62,7 @@ export default function BoatList() {
     const boatInterval = setInterval(refreshBoats, 30000);
 
     return () => clearInterval(boatInterval);
-  }, []);
+  }, [showAll]);
 
   return (
     <div>
@@ -85,6 +86,10 @@ export default function BoatList() {
       <label>
         <input type="checkbox" checked={showMap} onChange={() => setShowMap(!showMap)} />
         Show Map
+      </label>
+      <label>
+        <input type="checkbox" checked={showAll} onChange={() => setShowAll(!showAll)} />
+        Show All
       </label>
     </div>
   )

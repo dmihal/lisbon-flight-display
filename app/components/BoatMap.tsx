@@ -1,3 +1,4 @@
+"use client";
 import { LatLngTuple } from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { NavigationalStatus, shipTypes } from "../utils/boats";
