@@ -1,8 +1,13 @@
 "use client";
-import { LatLngTuple } from "leaflet";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import type { LatLngTuple } from "leaflet";
 import { NavigationalStatus, shipTypes } from "../utils/boats";
 import 'leaflet/dist/leaflet.css';
+import dynamic from "next/dynamic";
+
+const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 
 const tejo: LatLngTuple = [38.691220, -9.166467];
 
