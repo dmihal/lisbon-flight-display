@@ -1,7 +1,6 @@
 "use client";
 import type { LatLngTuple } from "leaflet";
 import { NavigationalStatus, shipTypes } from "../utils/boats";
-import 'leaflet/dist/leaflet.css';
 import dynamic from "next/dynamic";
 
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
