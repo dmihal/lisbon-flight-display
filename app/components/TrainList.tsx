@@ -15,7 +15,7 @@ const stations = [
 
 const MINUTE = 60 * 1000;
 
-export default function TrainList() {
+export default function TrainList({ showAll }: { showAll?: boolean }) {
   const [trains, setTrains] = useState<any[]>([]);
   const [showData, setShowData] = useState(false);
 
@@ -91,19 +91,13 @@ export default function TrainList() {
 
   return (
     <div>
-      Trains
       <div>
         {trains.filter(train => isVisible(train) && train.line == 'Fertagus').map(train => (
           <Train key={train.number} train={train} />
         ))}
       </div>
 
-      <label>
-        <input type="checkbox" checked={showData} onChange={() => setShowData(!showData)} />
-        Show data
-      </label>
-
-      {showData && (
+      {showAll && (
         <ul>
           {trains.map(train => (
             <li key={train.number}>

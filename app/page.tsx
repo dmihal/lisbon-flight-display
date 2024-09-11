@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col justify-between">
       <FlightList />
-      {showTrains && <TrainList />}
+      <TrainList showAll={showTrains} />
       {showBoats && <BoatList />}
       <Settings
         showBoats={showBoats}
