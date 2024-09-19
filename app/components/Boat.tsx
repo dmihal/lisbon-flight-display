@@ -17,7 +17,9 @@ export default function Boat({ boat, staticData, isVisible }: { boat: any, stati
         <div className="text-6xl md:row-span-2 flex items-center">🚤</div>
         <div className="text-2xl font-medium text-center md:row-span-2 flex items-center">-</div>
         <div className="text-3xl col-span-2 md:col-span-1 md:text-5xl font-bold md:row-span-2 flex items-center">
-          {boat.MetaData.ShipName}
+          <a href={`https://www.marinetraffic.com/en/ais/details/ships/mmsi:${boat.MetaData.MMSI}`} target="_blank" rel="noreferrer">
+            {boat.MetaData.ShipName}
+          </a>
         </div>
         <div className="md:text-3xl text-center text-xl">Speed: {boat.Message.PositionReport.Sog} knots</div>
         <div className="md:col-start-4 md:row-start-2 md:text-2xl text-center text-xl">{shipType}</div>
