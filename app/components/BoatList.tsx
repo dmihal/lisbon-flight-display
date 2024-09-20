@@ -31,11 +31,10 @@ const tejoVisible: Point[] = [
   { x: 38.6993771, y: -9.1662025 }
 ];
 
-export default function BoatList() {
+export default function BoatList({ showAll }: { showAll?: boolean }) {
   const [boats, setBoats] = useState<any[]>([]);
   const [metadata, setMetadata] = useState<any>({});
   const [showMap, setShowMap] = useState(false);
-  const [showAll, setShowAll] = useState(false);
 
   const refreshBoats = async () => {
     const response = await fetch("/api/boats");
@@ -66,18 +65,24 @@ export default function BoatList() {
 
   return (
     <div>
-      Visible
       <div>
         {boats.filter(boat => boat.isVisible).map(boat => (
           <Boat key={boat.MetaData.MMSI} boat={boat} staticData={metadata[boat.MetaData.MMSI]?.Message.ShipStaticData} isVisible />
         ))}
       </div>
-      Others
-      <ul>
-        {boats.filter(boat => !boat.isVisible).map(boat => (
-          <Boat key={boat.MetaData.MMSI} boat={boat} staticData={metadata[boat.MetaData.MMSI]?.Message.ShipStaticData} />
-        ))}
-      </ul>
+
+      {showAll && (
+        <ul>
+          {boats.filter(boat => !boat.isVisible).map(boat => (
+            <Boat
+              key={boat.MetaData.MMSI}
+              boat={boat}
+              staticData={metadata[boat.MetaData.MMSI]?.Message.ShipStaticData}
+              showData
+            />
+          ))}
+        </ul>
+      )}
 
       {showMap && (
         <BoatMap boats={boats} metadata={metadata} />
@@ -86,10 +91,6 @@ export default function BoatList() {
       <label>
         <input type="checkbox" checked={showMap} onChange={() => setShowMap(!showMap)} />
         Show Map
-      </label>
-      <label>
-        <input type="checkbox" checked={showAll} onChange={() => setShowAll(!showAll)} />
-        Show All
       </label>
     </div>
   )

@@ -13,7 +13,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col justify-between">
       <FlightList />
       <TrainList showAll={showTrains} />
-      {showBoats && <BoatList />}
+      <BoatList showAll={showBoats} />
       <Settings
         showBoats={showBoats}
         onShowBoats={(newShowBoats: boolean) => setShowBoats(newShowBoats)}
