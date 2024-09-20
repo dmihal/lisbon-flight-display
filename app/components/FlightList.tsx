@@ -50,6 +50,7 @@ const lisbonDepartureArea: Point[] = [
 ];
 
 interface Flight {
+  callsign: string;
   extraInfo: {
     flight?: string;
     type: string;
@@ -82,7 +83,6 @@ export default function FlightList() {
       })
       .filter((flight: any) => flight.isArriving || flight.isDeparting)
       .sort((a: any, b: any) => a.distanceToHome - b.distanceToHome);
-    console.log(filteredFlights);
     setLiveFlights(filteredFlights);
   }
 
@@ -105,6 +105,8 @@ export default function FlightList() {
             airline={flight.extraInfo.flight ? getAirline(flight.extraInfo.flight) : "Unknown"}
             distance={flight.distanceToHome}
             speed={knotsToKmPerSec(flight.speed) * -1}
+            callsign={flight.callsign}
+            data={flight}
           />
         </ErrorBoundary>
       ))}

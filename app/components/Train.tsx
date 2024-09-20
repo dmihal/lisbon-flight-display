@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { formatTime } from "../utils/time";
 import { getDirection, percentage } from "../utils/trains";
 import { Counter } from "./Counter";
 
 export default function Train({ train }: { train: any }) {
+  const [showData, setShowData] = useState(false);
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-[80px_100px_2fr_1fr_300px] bg-gray-800 text-white p-4 rounded-lg shadow-lg gap-4 md:gap-0 m-4">
-      <div className="text-6xl md:row-span-2 flex items-center">🚂</div>
+      <div className="text-6xl md:row-span-2 flex items-center" onClick={() => setShowData(!showData)}>🚂</div>
       <div className="text-2xl font-medium text-center md:row-span-2 flex items-center">{train.number}</div>
       <div className="text-3xl col-span-2 md:col-span-1 md:text-5xl font-bold md:row-span-2 flex items-center">
         {getDirection(train)}-bound<br />{train.destination}
@@ -16,6 +19,12 @@ export default function Train({ train }: { train: any }) {
         <Counter value={(train.arrivalTime.getTime() - Date.now()) / 60 / 1000} minutes />
         min until next station
       </div>
+
+      {showData && (
+        <div className="col-span-5">
+          <pre>{JSON.stringify(train, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 }
